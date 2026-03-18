@@ -11,6 +11,8 @@ import io.github.chsbuffer.revancedxposed.strings
 import org.luckypray.dexkit.query.enums.StringMatchType
 import org.luckypray.dexkit.query.enums.UsingType
 
+// === EXISTING FINGERPRINTS ===
+
 val productStateProtoFingerprint = fingerprint {
     returns("Ljava/util/Map;")
     classMatcher { descriptor = "Lcom/spotify/remoteconfig/internal/ProductStateProto;" }
@@ -26,6 +28,7 @@ val buildQueryParametersFingerprint = findMethodDirect {
         }
     }.single()
 }
+
 val contextFromJsonFingerprint = fingerprint {
     opcodes(
         Opcode.INVOKE_STATIC,
@@ -105,4 +108,121 @@ val pendragonJsonFetchMessageListRequestFingerprint = findMethodDirect {
             }
         }
     }.single()
+}
+
+// === NEW FINGERPRINTS ===
+
+// Force update
+val forceUpdateDialogFingerprint = findMethodDirect {
+    runCatching {
+        fingerprint {
+            strings("force_update", "update_required")
+        }
+    }.getOrElse {
+        fingerprint {
+            strings("forceUpdate", "mandatory_update")
+        }
+    }
+}
+
+val forceUpdateVersionFingerprint = findMethodDirect {
+    runCatching {
+        fingerprint {
+            strings("min_supported_version", "minimum_version")
+        }
+    }.getOrElse {
+        fingerprint {
+            strings("minVersion", "min_version")
+        }
+    }
+}
+
+// Ads
+val audioAdFingerprint = findMethodDirect {
+    runCatching {
+        fingerprint {
+            strings("audio_ad", "audioAd", "interstitial")
+        }
+    }.getOrElse {
+        fingerprint {
+            strings("ad_type", "adType")
+        }
+    }
+}
+
+val bannerAdFingerprint = findMethodDirect {
+    runCatching {
+        fingerprint {
+            strings("banner_ad", "bannerAd")
+        }
+    }.getOrElse {
+        fingerprint {
+            strings("ad_banner", "adBanner")
+        }
+    }
+}
+
+// Skips
+val skipLimitFingerprint = findMethodDirect {
+    runCatching {
+        fingerprint {
+            strings("skip_limit", "skipLimit", "skips_remaining")
+        }
+    }.getOrElse {
+        fingerprint {
+            strings("remaining_skips", "maxSkips")
+        }
+    }
+}
+
+// Shuffle
+val shuffleFingerprint = findMethodDirect {
+    runCatching {
+        fingerprint {
+            strings("shufflingContext", "forced_shuffle")
+        }
+    }.getOrElse {
+        fingerprint {
+            strings("shuffle_forced", "isShuffle")
+        }
+    }
+}
+
+// On demand
+val onDemandFingerprint = findMethodDirect {
+    runCatching {
+        fingerprint {
+            strings("on_demand", "onDemand")
+        }
+    }.getOrElse {
+        fingerprint {
+            strings("is_on_demand", "playOnDemand")
+        }
+    }
+}
+
+// Audio quality
+val audioQualityFingerprint = findMethodDirect {
+    runCatching {
+        fingerprint {
+            strings("audio_quality", "audioQuality", "VERY_HIGH")
+        }
+    }.getOrElse {
+        fingerprint {
+            strings("quality_level", "HIGH_QUALITY")
+        }
+    }
+}
+
+// Upsell UI
+val premiumUpsellUIFingerprint = findMethodDirect {
+    runCatching {
+        fingerprint {
+            strings("premium_upsell", "upsell_trigger")
+        }
+    }.getOrElse {
+        fingerprint {
+            strings("show_upsell", "upsellView")
+        }
+    }
 }
