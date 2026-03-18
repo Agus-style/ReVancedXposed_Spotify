@@ -111,6 +111,8 @@ dependencies {
     testImplementation(libs.slf4j.simple)
     compileOnly(libs.xposed)
     compileOnly(project(":stub"))
+    implementation("dev.rikka.shizuku:api:13.1.5")
+    implementation("dev.rikka.shizuku:provider:13.1.5")
 }
 
 androidComponents {
