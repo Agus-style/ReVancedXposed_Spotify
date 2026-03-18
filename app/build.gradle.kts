@@ -38,7 +38,6 @@ private fun genPackageName(seed: Long): String {
         prev = next
     }
     if (!builder.contains('.')) {
-        // Pick a random index and set it as dot
         val idx = random.nextInt(len - 2)
         builder[idx + 1] = '.'
     }
@@ -47,9 +46,12 @@ private fun genPackageName(seed: Long): String {
 
 android {
     namespace = "io.github.chsbuffer.revancedxposed"
+    compileSdk = 35
 
     defaultConfig {
         applicationId = myPackageName
+        minSdk = 26
+        targetSdk = 35
         versionCode = 33
         versionName = gitCommitDateProvider.get().trim()
         buildConfigField("String", "COMMIT_HASH", "\"${gitCommitHashProvider.get().trim()}\"")
@@ -62,9 +64,7 @@ android {
     }
     packaging.resources {
         excludes.addAll(
-            arrayOf(
-                "META-INF/**", "**.bin"
-            )
+            arrayOf("META-INF/**", "**.bin")
         )
     }
     buildFeatures.buildConfig = true
@@ -86,6 +86,7 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 }
+
 kotlin {
     compilerOptions {
         freeCompilerArgs.addAll(
@@ -96,14 +97,14 @@ kotlin {
         jvmTarget = JvmTarget.JVM_17
     }
 }
+
 tasks.withType<Test> {
     useJUnitPlatform()
 }
 
 dependencies {
-//    implementation(libs.dexkit)
     implementation(group = "", name = "dexkit-android", ext = "aar")
-    implementation("com.google.flatbuffers:flatbuffers-java:23.5.26") // dexkit dependency
+    implementation("com.google.flatbuffers:flatbuffers-java:23.5.26")
     implementation(libs.annotation)
     testImplementation(kotlin("test-junit5"))
     testImplementation(libs.junit.jupiter.params)
@@ -113,6 +114,7 @@ dependencies {
     compileOnly(project(":stub"))
     implementation("dev.rikka.shizuku:api:13.1.5")
     implementation("dev.rikka.shizuku:provider:13.1.5")
+    implementation("androidx.appcompat:appcompat:1.7.0")
 }
 
 androidComponents {
